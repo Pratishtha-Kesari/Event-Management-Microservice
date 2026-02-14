@@ -1,10 +1,13 @@
 package com.harsh.payment_service.service;
+import com.harsh.payment_service.clients.EventClient;
+import com.harsh.payment_service.clients.RegistrationClient;
 import com.harsh.payment_service.dto.PaymentRequestDto;
 import com.harsh.payment_service.dto.PaymentResponseDto;
 import com.harsh.payment_service.entity.Payment;
 import com.harsh.payment_service.entity.PaymentStatus;
 import com.harsh.payment_service.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,11 +18,11 @@ import java.time.LocalDateTime;
 public class PaymentService {
 
     private final PaymentRepository repo;
-    private final RestTemplate restTemplate;
+    private final ModelMapper modelMapper;
 
-    // Registration confirm endpoint
-    private static final String REG_CONFIRM_URL = "http://localhost:8084/api/register/";
-    private static final String EVENT_SEAT_URL   = "http://localhost:8082/api/events/";
+    private final RegistrationClient registrationClient;
+    private final EventClient eventClient;
+
 
     public PaymentResponseDto pay(PaymentRequestDto req) {
 
@@ -38,21 +41,13 @@ public class PaymentService {
 
         // If SUCCESS -> confirm registration
         if (status == PaymentStatus.SUCCESS) {
-            restTemplate.put(REG_CONFIRM_URL + req.getRegistrationId() + "/confirm", null);
+            registrationClient.confirm(req.getRegistrationId());
 
-            restTemplate.put(EVENT_SEAT_URL + req.getEventId() + "/decrease-seat", null);
+             eventClient.decreaseSeat(req.getEventId());
         }
 
-        return mapToResponse(saved);
+
+        return modelMapper.map(saved, PaymentResponseDto.class);
     }
 
-    private PaymentResponseDto mapToResponse(Payment p) {
-        return PaymentResponseDto.builder()
-                .paymentId(p.getPaymentId())
-                .registrationId(p.getRegistrationId())
-                .amount(p.getAmount())
-                .status(p.getStatus())
-                .paymentDate(p.getPaymentDate())
-                .build();
-    }
 }
