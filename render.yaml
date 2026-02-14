@@ -1,0 +1,131 @@
+services:
+  - type: pserv
+    name: eureka
+    runtime: docker
+    rootDir: eureka
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8761"
+
+  - type: web
+    name: api-gateway
+    runtime: docker
+    rootDir: api-gateway
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: EUREKA_HOST
+        fromService:
+          name: eureka
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: eureka
+          type: pserv
+          property: port
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://$(EUREKA_HOST):$(EUREKA_PORT)/eureka
+      # JWT secret MUST be same as auth-service
+      - key: APP_JWT_SECRET
+        sync: false
+
+  - type: pserv
+    name: auth-service
+    runtime: docker
+    rootDir: auth-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8086"
+      - key: EUREKA_HOST
+        fromService:
+          name: eureka
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: eureka
+          type: pserv
+          property: port
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://$(EUREKA_HOST):$(EUREKA_PORT)/eureka
+
+      # JWT
+      - key: APP_JWT_SECRET
+        sync: false
+      - key: APP_JWT_EXPIRATION_MS
+        value: "86400000"
+
+      # DB (Railway MySQL) - set these in Render dashboard (recommended)
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+
+  - type: pserv
+    name: event-service
+    runtime: docker
+    rootDir: event-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8082"
+      - key: EUREKA_HOST
+        fromService:
+          name: eureka
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: eureka
+          type: pserv
+          property: port
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://$(EUREKA_HOST):$(EUREKA_PORT)/eureka
+      - key: APP_JWT_SECRET
+        sync: false
+
+      # DB if event-service uses DB
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+
+  - type: pserv
+    name: registration-service
+    runtime: docker
+    rootDir: registration-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: "8084"
+      - key: EUREKA_HOST
+        fromService:
+          name: eureka
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: eureka
+          type: pserv
+          property: port
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://$(EUREKA_HOST):$(EUREKA_PORT)/eureka
+      - key: APP_JWT_SECRET
+        sync: false
+
+      # DB if registration-service uses DB
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
