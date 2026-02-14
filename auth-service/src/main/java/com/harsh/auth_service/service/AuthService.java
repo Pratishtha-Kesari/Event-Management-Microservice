@@ -1,4 +1,5 @@
 package com.harsh.auth_service.service;
+
 import com.harsh.auth_service.dto.AuthResponse;
 import com.harsh.auth_service.dto.LoginRequest;
 import com.harsh.auth_service.dto.RegisterRequest;
@@ -31,7 +32,8 @@ public class AuthService {
                 .role(role)
                 .build());
 
-        String token = jwtUtil.generateToken(saved.getEmail(), saved.getId(), saved.getRole().name());
+
+        String token = jwtUtil.generateToken(saved.getId(), saved.getEmail(), saved.getRole().name());
 
         return AuthResponse.builder()
                 .token(token)
@@ -49,7 +51,8 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail(), user.getId(), user.getRole().name());
+
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole().name());
 
         return AuthResponse.builder()
                 .token(token)

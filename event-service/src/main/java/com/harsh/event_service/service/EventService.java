@@ -15,20 +15,25 @@ import java.util.List;
 public class EventService {
     private final EventRepository repo;
 
-    public EventResponse create(EventCreateRequest req) {
+    public EventResponse create(EventCreateRequest req, Long userId, String role) {
+
+        // Defense-in-depth (extra safety)
+        if (!"ADMIN".equalsIgnoreCase(role)) {
+            throw new RuntimeException("Only ADMIN can create events");
+        }
+
         Event e = Event.builder()
                 .title(req.getTitle())
                 .description(req.getDescription())
                 .location(req.getLocation())
                 .date(req.getDate())
                 .totalSeats(req.getTotalSeats())
-                .availableSeats(req.getTotalSeats()) // initial same
+                .availableSeats(req.getTotalSeats())
                 .price(req.getPrice())
-                .createdBy(req.getCreatedBy())
+                .createdBy(userId)
                 .build();
 
-        Event saved = repo.save(e);
-        return toResponse(saved);
+        return toResponse(repo.save(e));
     }
 
     public List<EventResponse> getAll() {

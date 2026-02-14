@@ -8,8 +8,6 @@ import lombok.*;
 @Builder
 public class RegistrationCreateRequest {
     @NotNull
-    private Long userId;
-
-    @NotNull
     private Long eventId;
+
 }

@@ -33,6 +33,4 @@ public class EventCreateRequest {
     @DecimalMin("0.0")
     private Double price;
 
-    @NotNull
-    private Long createdBy;
 }

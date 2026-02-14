@@ -17,8 +17,11 @@ public class RegistrationController {
     private final RegistrationService service;
 
     @PostMapping
-    public RegistrationResponse create(@Valid @RequestBody RegistrationCreateRequest req) {
-        return service.create(req);
+    public RegistrationResponse create(
+            @RequestHeader("X-User-Id") Long userId,
+            @Valid @RequestBody RegistrationCreateRequest req
+    ) {
+        return service.create(userId, req);
     }
 
     @GetMapping

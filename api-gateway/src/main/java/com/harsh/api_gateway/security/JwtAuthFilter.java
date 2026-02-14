@@ -1,4 +1,5 @@
 package com.harsh.api_gateway.security;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -7,6 +8,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -28,12 +30,18 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String path = exchange.getRequest().getURI().getPath();
+        HttpMethod method = exchange.getRequest().getMethod();
 
-        // Public routes
-        if (path.startsWith("/api/auth/") || path.equals("/api/auth")) {
+        if (path.startsWith("/api/events") && method == HttpMethod.GET) {
             return chain.filter(exchange);
         }
 
+        // Public routes
+        if (path.startsWith("/api/auth/")) {
+            return chain.filter(exchange);
+        }
+
+        // Require token for everything else
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -49,13 +57,22 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
                     .parseSignedClaims(token)
                     .getPayload();
 
+            System.out.println("JWT subject=" + claims.getSubject());
+            System.out.println("JWT userId=" + claims.get("userId"));
+            System.out.println("JWT role=" + claims.get("role"));
+
+
             String email = claims.getSubject();
-            Object userIdObj = claims.get("userId");
-            Object roleObj = claims.get("role");
+            String userId = String.valueOf(claims.get("userId"));
+            String role = String.valueOf(claims.get("role")); // ADMIN / USER
 
-            String userId = String.valueOf(userIdObj);
-            String role = String.valueOf(roleObj);
+            // Role rules (MVP)
+            if (!isAllowed(role, path, method)) {
+                exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                return exchange.getResponse().setComplete();
+            }
 
+            // Pass user context downstream
             ServerWebExchange mutated = exchange.mutate()
                     .request(exchange.getRequest().mutate()
                             .header("X-User-Email", email)
@@ -70,6 +87,45 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
+    }
+
+    private boolean isAllowed(String role, String path, HttpMethod method) {
+
+
+        //  Event service rules
+        if (path.startsWith("/api/events")) {
+            // Admin-only for write operations
+            if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE) {
+                return "ADMIN".equalsIgnoreCase(role);
+            }
+            return "USER".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role);
+        }
+
+        // 2) Registration rules only USER should register
+        if (path.startsWith("/api/register")) {
+            if (method == HttpMethod.POST) {
+                return "USER".equalsIgnoreCase(role);
+            }
+
+            return "USER".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role);
+        }
+
+        // 3) Payment rules USER makes payments
+        if (path.startsWith("/api/payment")) {
+            if (method == HttpMethod.POST) {
+                return "USER".equalsIgnoreCase(role);
+            }
+            return "USER".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role);
+        }
+
+        // 4) Users endpoint
+        //allow ADMIN to view all users, USER can only view self later (we'll do later)
+        if (path.startsWith("/api/users")) {
+            return "ADMIN".equalsIgnoreCase(role);
+        }
+
+        // Default: allow any authenticated
+        return "USER".equalsIgnoreCase(role) || "ADMIN".equalsIgnoreCase(role);
     }
 
     @Override

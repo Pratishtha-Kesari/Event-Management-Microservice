@@ -9,6 +9,7 @@ import com.harsh.registration_service.exception.InvalidEventException;
 import com.harsh.registration_service.exception.InvalidUserException;
 import com.harsh.registration_service.exception.RegistrationNotFoundException;
 import com.harsh.registration_service.repository.RegistrationRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -27,32 +28,60 @@ public class RegistrationService {
     private final UserClient userClient;
     private final EventClient eventClient;
 
-    public RegistrationResponse create(RegistrationCreateRequest req) {
+    public RegistrationResponse create(Long userIdFromHeader, RegistrationCreateRequest req) {
 
-        // validate user exists
+        Long eventId = req.getEventId();
+
+//        // Validate USER exists
+//        try {
+//            userClient.getUserById(userIdFromHeader);
+//        } catch (Exception e) {
+//            throw new InvalidUserException("User not found with id " + userIdFromHeader);
+//        }
+
+        System.out.println("Calling EVENT service for id=" + eventId);
+
+        // Validate EVENT exists
+//        try {
+//            eventClient.getEventById(eventId);
+//        } catch (Exception e) {
+//            throw new InvalidEventException("Event not found with id " + eventId);
+//        }
+
         try {
-            userClient.getUserById(req.getUserId());
-        } catch (Exception e) {
-            throw new InvalidUserException("User not found with id " + req.getUserId());
+            eventClient.getEventById(eventId);
+        } catch (FeignException.NotFound e) {
+            throw new InvalidEventException("Event not found with id " + eventId);
+        } catch (FeignException e) {
+            // other feign errors like 401/503/500
+            throw new RuntimeException("Event-service call failed: status=" + e.status(), e);
         }
-
-        // validate event exists
-        try {
-            eventClient.getEventById(req.getEventId());
-        } catch (Exception e) {
-            throw new InvalidEventException("Event not found with id " + req.getEventId());
-        }
-
-        Registration reg = Registration.builder()
-                .userId(req.getUserId())
-                .eventId(req.getEventId())
+        Registration r = Registration.builder()
+                .userId(userIdFromHeader)              // ✅ from header
+                .eventId(eventId)
+                .ticketNumber(generateTicket())
                 .status(RegistrationStatus.PENDING)
-                .ticketNumber(null)
                 .registeredAt(LocalDateTime.now())
                 .build();
 
-        return modelMapper.map(repo.save(reg), RegistrationResponse.class);
+        Registration saved = repo.save(r);
+
+        return RegistrationResponse.builder()
+                .registrationId(saved.getRegistrationId())
+                .userId(saved.getUserId())
+                .eventId(saved.getEventId())
+                .ticketNumber(saved.getTicketNumber())
+                .status(saved.getStatus())
+                .registeredAt(saved.getRegisteredAt())
+                .build();
     }
+
+    private String generateTicket() {
+        return "TKT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+//        return modelMapper.map(repo.save(reg), RegistrationResponse.class);
+//    }
 
     public List<RegistrationResponse> getAll() {
         return repo.findAll()

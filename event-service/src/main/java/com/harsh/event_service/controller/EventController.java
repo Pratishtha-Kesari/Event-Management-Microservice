@@ -16,8 +16,12 @@ public class EventController {
     private final EventService service;
 
     @PostMapping
-    public EventResponse create(@Valid @RequestBody EventCreateRequest req) {
-        return service.create(req);
+    public EventResponse create(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader("X-User-Role") String role,
+            @Valid @RequestBody EventCreateRequest req
+    ) {
+        return service.create(req, userId, role);
     }
 
     @GetMapping
