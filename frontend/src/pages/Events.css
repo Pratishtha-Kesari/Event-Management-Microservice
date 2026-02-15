@@ -1,0 +1,130 @@
+.events-page {
+  animation: fadeIn 0.4s var(--transition) forwards;
+}
+
+.events-page h1 {
+  margin: 0 0 32px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.page-error-block {
+  padding: 40px 32px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.4s var(--transition);
+}
+
+.page-error {
+  color: var(--color-error);
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+
+.page-error-hint {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.empty {
+  text-align: center;
+  padding: 64px 24px;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
+}
+
+.empty a {
+  font-weight: 600;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.event-card {
+  display: block;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-slow);
+  animation: fadeInUp 0.5s var(--transition) forwards;
+}
+
+.event-card:nth-child(1) { animation-delay: 0.05s; }
+.event-card:nth-child(2) { animation-delay: 0.1s; }
+.event-card:nth-child(3) { animation-delay: 0.15s; }
+.event-card:nth-child(4) { animation-delay: 0.2s; }
+.event-card:nth-child(5) { animation-delay: 0.25s; }
+.event-card:nth-child(6) { animation-delay: 0.3s; }
+.event-card:nth-child(7) { animation-delay: 0.35s; }
+.event-card:nth-child(8) { animation-delay: 0.4s; }
+.event-card:nth-child(n+9) { animation-delay: 0.45s; }
+
+.event-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-accent);
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-card h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.event-meta {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.event-desc {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.event-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.event-footer .seats {
+  color: var(--color-text-muted);
+}
+
+.event-footer .price {
+  font-weight: 700;
+  color: var(--color-accent);
+  font-size: 16px;
+}

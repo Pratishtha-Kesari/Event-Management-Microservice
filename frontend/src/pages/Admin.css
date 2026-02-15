@@ -1,0 +1,152 @@
+.admin-page {
+  animation: fadeIn 0.4s var(--transition) forwards;
+}
+
+.admin-page h1 {
+  margin: 0 0 32px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.admin-tabs button {
+  padding: 12px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--transition);
+}
+
+.admin-tabs button:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.admin-tabs button.active {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.admin-section {
+  margin-bottom: 36px;
+  padding: 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.admin-section h2 {
+  margin: 0 0 24px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.admin-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.admin-form input,
+.admin-form textarea {
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  transition: all var(--transition);
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.admin-form .error {
+  padding: 12px 16px;
+  background: var(--color-error-light);
+  color: var(--color-error);
+  font-size: 14px;
+  border-radius: var(--radius);
+}
+
+.admin-form button {
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  align-self: flex-start;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+}
+
+.admin-form button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
+}
+
+.admin-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.admin-table th {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-table tbody tr {
+  transition: background var(--transition);
+}
+
+.admin-table tbody tr:hover {
+  background: var(--color-accent-light);
+}
+
+.admin-page .empty {
+  padding: 48px 24px;
+  font-size: 15px;
+}

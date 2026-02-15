@@ -1,0 +1,119 @@
+.auth-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  padding: 40px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--color-border-light);
+  animation: fadeInUp 0.5s var(--transition) forwards;
+}
+
+.auth-card h1 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.auth-card .auth-subtitle {
+  margin: 0 0 32px;
+  font-size: 15px;
+  color: var(--color-text-muted);
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-card label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: -4px;
+}
+
+.auth-card input,
+.auth-card select {
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  transition: all var(--transition);
+}
+
+.auth-card input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.auth-card input:focus,
+.auth-card select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.auth-card .error {
+  padding: 12px 16px;
+  background: var(--color-error-light);
+  color: var(--color-error);
+  font-size: 14px;
+  border-radius: var(--radius);
+  animation: fadeIn 0.3s ease;
+}
+
+.auth-card button {
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  margin-top: 8px;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+}
+
+.auth-card button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
+}
+
+.auth-card button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-card button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-footer {
+  margin-top: 28px;
+  padding-top: 24px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.auth-footer a {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}

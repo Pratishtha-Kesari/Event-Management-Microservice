@@ -1,0 +1,125 @@
+.registrations-page {
+  animation: fadeIn 0.4s var(--transition) forwards;
+}
+
+.registrations-page h1 {
+  margin: 0 0 28px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.registrations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reg-card {
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  animation: fadeInUp 0.4s var(--transition) forwards;
+}
+
+.reg-card:nth-child(1) { animation-delay: 0.05s; }
+.reg-card:nth-child(2) { animation-delay: 0.1s; }
+.reg-card:nth-child(3) { animation-delay: 0.15s; }
+.reg-card:nth-child(4) { animation-delay: 0.2s; }
+.reg-card:nth-child(5) { animation-delay: 0.25s; }
+.reg-card:nth-child(n+6) { animation-delay: 0.3s; }
+
+.reg-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border);
+}
+
+.reg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 16px;
+}
+
+.reg-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.reg-title:hover {
+  color: var(--color-accent);
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge.confirmed {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.badge.pending {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.badge.cancelled {
+  background: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.reg-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: var(--color-error-light);
+  transform: translateY(-1px);
+}
+
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.registrations-page .empty {
+  padding: 64px 24px;
+  font-size: 16px;
+}
+
+.registrations-page .empty a {
+  font-weight: 600;
+}
